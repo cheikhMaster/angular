@@ -1,0 +1,81 @@
+<!-- database-list.component.html -->
+<div class="page-container">
+  <div class="header-actions">
+    <h1>Bases de données</h1>
+    <button mat-raised-button color="primary" routerLink="/databases/new">
+      <mat-icon>add</mat-icon> Nouvelle base de données
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!loading && databases.length === 0" class="empty-state">
+        <mat-icon>storage</mat-icon>
+        <p>Aucune base de données trouvée. Ajoutez-en une pour commencer.</p>
+        <button mat-raised-button color="primary" routerLink="/databases/new">
+          Ajouter une base de données
+        </button>
+      </div>
+
+      <table mat-table [dataSource]="databases" class="database-table" *ngIf="!loading && databases.length > 0">
+        <!-- Colonnes pour les bases de données -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nom</th>
+          <td mat-cell *matCellDef="let db">{{ db.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let db">{{ db.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Adresse</th>
+          <td mat-cell *matCellDef="let db">{{ db.address }}:{{ db.port }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <td mat-cell *matCellDef="let db" [ngClass]="'status-' + db.status.toLowerCase()">
+            {{ db.status }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isLocal">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let db">{{ db.isLocal ? 'Locale' : 'Distante' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let db">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item routerLink="/databases/edit/{{ db.id }}">
+                <mat-icon>edit</mat-icon>
+                <span>Modifier</span>
+              </button>
+              <button mat-menu-item (click)="testDatabaseConnection(db.id)">
+                <mat-icon>sync</mat-icon>
+                <span>Tester la connexion</span>
+              </button>
+              <button mat-menu-item (click)="deleteDatabase(db.id)">
+                <mat-icon>delete</mat-icon>
+                <span>Supprimer</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

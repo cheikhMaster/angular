@@ -1,0 +1,53 @@
+.page-container {
+  padding: 20px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+  }
+}
+
+.backup-table {
+  width: 100%;
+}
+
+.status-completed {
+  color: green;
+}
+
+.status-in_progress {
+  color: blue;
+}
+
+.status-pending {
+  color: orange;
+}
+
+.status-failed {
+  color: red;
+}
+
+.status-canceled {
+  color: gray;
+}

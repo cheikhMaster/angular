@@ -1,0 +1,19 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+}
+
+.app-title {
+  margin-left: 8px;
+  color: black;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-button {
+  margin-left: 10px;
+}

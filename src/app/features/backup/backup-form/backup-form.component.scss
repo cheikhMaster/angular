@@ -1,0 +1,23 @@
+.form-container {
+  padding: 20px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.button-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
