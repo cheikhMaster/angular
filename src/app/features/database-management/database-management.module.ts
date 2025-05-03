@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { MatRadioModule } from '@angular/material/radio';
 @NgModule({
   declarations: [
     DatabaseListComponent,
@@ -41,7 +41,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
-    MatMenuModule
+    MatMenuModule,
+    MatRadioModule
   ]
 })
 export class DatabaseManagementModule { }

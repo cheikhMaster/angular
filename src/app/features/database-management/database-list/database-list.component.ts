@@ -29,18 +29,17 @@ export class DatabaseListComponent implements OnInit {
     this.loading = true;
     this.databaseService.getAllDatabases().subscribe({
       next: (data) => {
-        console.log('Bases de données chargées:', data);
-        this.databases = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des bases de données:', err);
-        this.snackBar.open('Erreur lors du chargement des bases de données', 'Fermer', {
-          duration: 3000
+        console.log('Données brutes des bases de données:', data);
+
+        // Vérifier chaque objet
+        this.databases = data.map(db => {
+          console.log(`Base de données ${db.name}, isLocal:`, db.isLocal);
+          return {
+            ...db,
+            isLocal: db.local !== undefined ? db.local : db.isLocal // Vérifier les deux noms possibles
+          };
         });
-        this.loading = false;
-        // Pour faciliter les tests, ajoutez temporairement ce code
-        this.databases = [];
+
         this.loading = false;
       }
     });

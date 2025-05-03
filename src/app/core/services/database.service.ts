@@ -20,8 +20,14 @@ export class DatabaseService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
+
   createDatabase(database: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, database);
+    console.log('Données envoyées au serveur:', JSON.stringify(database));
+    // Si nécessaire, forcez la valeur à être un boolean
+    if (database.isLocal !== undefined) {
+      database.isLocal = Boolean(database.isLocal);
+    }
+    return this.http.post<any>(`${this.apiUrl}`, database);
   }
 
   updateDatabase(id: number, database: any): Observable<any> {
@@ -38,5 +44,9 @@ export class DatabaseService {
   getDatabasesByType(type: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}?type=${type}`);
   }
+  // Dans database.service.ts
+testConnection(connectionData: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/databases/test-connection`, connectionData);
+}
 
 }
