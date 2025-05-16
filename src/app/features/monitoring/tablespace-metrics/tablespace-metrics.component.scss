@@ -1,0 +1,157 @@
+.tablespace-metrics {
+  padding: 20px;
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+
+  mat-form-field {
+    width: 200px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+
+  mat-spinner {
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+.metrics-content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.chart-card {
+  margin-bottom: 20px;
+
+  .chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+  }
+}
+
+.details-card {
+  margin-top: 20px;
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+}
+
+.metrics-table {
+  width: 100%;
+
+  .mat-column-name {
+    width: 30%;
+  }
+
+  .mat-column-usage {
+    width: 30%;
+  }
+
+  .mat-column-size,
+  .mat-column-free {
+    width: 15%;
+    text-align: right;
+  }
+
+  .mat-column-status {
+    width: 10%;
+    text-align: center;
+  }
+
+  .usage-bar {
+    position: relative;
+    height: 20px;
+    width: 100%;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .usage-progress {
+      position: absolute;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-radius: 10px;
+
+      &.normal {
+        background-color: #4caf50;
+      }
+
+      &.warning {
+        background-color: #ff9800;
+      }
+
+      &.critical {
+        background-color: #f44336;
+      }
+    }
+
+    .usage-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 20px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+      text-shadow: 0 0 2px white;
+    }
+  }
+
+  .status-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+    }
+
+    &.normal mat-icon {
+      color: #4caf50;
+    }
+
+    &.warning mat-icon {
+      color: #ff9800;
+    }
+
+    &.critical mat-icon {
+      color: #f44336;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

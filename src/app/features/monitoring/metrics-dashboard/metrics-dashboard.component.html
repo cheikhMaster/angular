@@ -1,1 +1,156 @@
-<p>metrics-dashboard works!</p>
+<div class="monitoring-dashboard">
+  <div class="header">
+    <h1>Monitoring des bases de données</h1>
+    <div class="header-actions">
+      <mat-form-field appearance="outline">
+        <mat-label>Base de données</mat-label>
+        <mat-select [(value)]="selectedDatabase" (selectionChange)="onDatabaseChange()">
+          <mat-option *ngFor="let db of databases" [value]="db">
+            {{ db.name }} ({{ db.type }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="exportData()">
+        <mat-icon>download</mat-icon> Exporter
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des métriques...</p>
+  </div>
+
+  <div *ngIf="!loading && selectedDatabase" class="content">
+    <!-- Alertes -->
+    <div class="alerts-section" *ngIf="alerts.length > 0">
+      <mat-card *ngFor="let alert of alerts" class="alert-card" [ngClass]="'alert-' + alert.type">
+        <mat-card-content>
+          <mat-icon>{{ alert.type === 'critical' ? 'error' : 'warning' }}</mat-icon>
+          <div class="alert-info">
+            <h3>{{ alert.message }}</h3>
+            <p>{{ alert.value }}</p>
+            <span class="timestamp">{{ alert.timestamp | date:'short' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Overview -->
+    <div class="overview-section">
+      <mat-card class="metric-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>people</mat-icon> Connexions
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="metric-value">{{ stats.connections.current }}</div>
+          <div class="metric-label">Sessions actives</div>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="stats.connections.percentage"
+            [color]="stats.connections.percentage > 80 ? 'warn' : 'primary'">
+          </mat-progress-bar>
+          <div class="metric-percentage">{{ stats.connections.percentage | number:'1.0-0' }}% utilisé</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>storage</mat-icon> Espace disque
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="metric-value">{{ stats.tablespace.used | number:'1.0-0' }} MB</div>
+          <div class="metric-label">Utilisé sur {{ stats.tablespace.total | number:'1.0-0' }} MB</div>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="stats.tablespace.percentage"
+            [color]="stats.tablespace.percentage > 85 ? 'warn' : 'primary'">
+          </mat-progress-bar>
+          <div class="metric-percentage">{{ stats.tablespace.percentage | number:'1.0-0' }}% utilisé</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>swap_vert</mat-icon> Opérations E/S
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="metric-value">{{ stats.io.total | number:'1.0-0' }}</div>
+          <div class="metric-label">Total des opérations</div>
+          <div class="io-stats">
+            <span class="reads">
+              <mat-icon>arrow_downward</mat-icon>
+              {{ stats.io.reads | number:'1.0-0' }} lectures
+            </span>
+            <span class="writes">
+              <mat-icon>arrow_upward</mat-icon>
+              {{ stats.io.writes | number:'1.0-0' }} écritures
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>memory</mat-icon> Mémoire
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="metric-value">{{ stats.memory.used | number:'1.0-0' }} MB</div>
+          <div class="metric-label">Utilisé sur {{ stats.memory.total | number:'1.0-0' }} MB</div>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="stats.memory.percentage"
+            [color]="stats.memory.percentage > 85 ? 'warn' : 'primary'">
+          </mat-progress-bar>
+          <div class="metric-percentage">{{ stats.memory.percentage | number:'1.0-0' }}% utilisé</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>speed</mat-icon> Performance
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="metric-value">{{ stats.performance.hitRatio | number:'1.0-0' }}%</div>
+          <div class="metric-label">Cache Hit Ratio</div>
+          <div class="performance-stats">
+            <span class="slow">
+              <mat-icon>slow_motion_video</mat-icon>
+              {{ stats.performance.slowQueries }} lentes
+            </span>
+            <span class="long">
+              <mat-icon>timer</mat-icon>
+              {{ stats.performance.longQueries }} longues
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Detailed Metrics Tabs -->
+    <mat-tab-group class="metrics-tabs">
+      <mat-tab label="Connexions">
+        <app-connection-metrics [database]="selectedDatabase"></app-connection-metrics>
+      </mat-tab>
+      <mat-tab label="Espace disque">
+        <app-tablespace-metrics [database]="selectedDatabase"></app-tablespace-metrics>
+      </mat-tab>
+      <mat-tab label="E/S">
+        <app-io-metrics [database]="selectedDatabase"></app-io-metrics>
+      </mat-tab>
+      <mat-tab label="Réseau">
+        <app-network-metrics [database]="selectedDatabase"></app-network-metrics>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
